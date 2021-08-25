@@ -1,0 +1,33 @@
+* {
+    font-family: 'Bebas Neue', cursive;
+}
+
+body {
+    background: #F1F2F3;
+}
+
+.header {
+    letter-spacing: 5px;
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.loader img {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.image-container img {
+    display: block;
+    margin: 10px auto;
+    max-width: 100%;
+    cursor: pointer;
+}
