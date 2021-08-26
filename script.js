@@ -8,6 +8,19 @@ const random = "random";
 const count = 3;
 const apiUrl = `https://api.unsplash.com/photos/${random}/?client_id=${accessKey}&count=${count}`;
 
+let ready = false;
+let imagesLoaded = 0;
+let totalImages = 0;
+
+function imageLoaded() {
+    imagesLoaded++;
+
+    if (imagesLoaded === totalImages) {
+        ready = true;
+        loaderEl.hidden = true;
+    }
+}
+
 function setAttributes(element, attributes) {
     for (const key in attributes) {
         element.setAttribute(key, attributes[key]);
@@ -15,6 +28,8 @@ function setAttributes(element, attributes) {
 }
 
 function displayPhotos() {
+    totalImages += photosArray.length;
+
     photosArray.forEach((photo) => {
         const item = document.createElement("a");
         setAttributes(item, {
@@ -29,6 +44,8 @@ function displayPhotos() {
             title: photo.alt_description
         });
 
+        img.addEventListener("load", imageLoaded);
+
         item.appendChild(img);
         imageContainerEl.appendChild(item);
     });
@@ -39,10 +56,16 @@ async function getImages() {
         const response = await fetch(apiUrl);
         photosArray = await response.json();
         displayPhotos();
-        console.log(photosArray);
     } catch (error) {
         console.log("Oops! No images found. Try again later :)\nError -", error);
     }
 }
+
+window.addEventListener("scroll", () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight -  1000 && ready) {
+        ready = false;
+        getImages();
+    }
+});
 
 getImages();
