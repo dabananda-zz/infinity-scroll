@@ -31,6 +31,11 @@ function displayPhotos() {
     totalImages += photosArray.length;
 
     photosArray.forEach((photo) => {
+        const imageItemEl = document.createElement("div");
+        setAttributes(imageItemEl, {
+            class: "image-item"
+        });
+
         const item = document.createElement("a");
         setAttributes(item, {
             href: photo.links.html,
@@ -44,10 +49,39 @@ function displayPhotos() {
             title: photo.alt_description
         });
 
+        const reactionsEl = document.createElement("div");
+        setAttributes(reactionsEl, {
+            class: "reactions"
+        });
+
+        reactionsEl.innerHTML = "";
+
+        const likes = photo.likes;
+        const views = photo.views;
+        const downloads = photo.downloads;
+        const download = photo.urls.raw;
+
+        reactionsEl.innerHTML += `<div>
+                                    <i class="bi bi-heart"></i>
+                                    <span class="react"> &nbsp;${likes}<span>
+                                </div>
+                                <div>
+                                    <i class="bi bi-eye"></i>
+                                    <span class="react"> &nbsp;${views}</span>
+                                </div>
+                                <div>
+                                    <a href="${download}" target="_blank">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <span class="react"> &nbsp;${downloads}</span>
+                                </div>`
+
         img.addEventListener("load", imageLoaded);
 
         item.appendChild(img);
-        imageContainerEl.appendChild(item);
+        imageItemEl.appendChild(item);
+        imageItemEl.appendChild(reactionsEl);
+        imageContainerEl.appendChild(imageItemEl);
     });
 }
 
@@ -55,6 +89,7 @@ async function getImages() {
     try {
         const response = await fetch(apiUrl);
         photosArray = await response.json();
+        console.log(photosArray);
         displayPhotos();
     } catch (error) {
         console.log("Oops! No images found. Try again later :)\nError -", error);
